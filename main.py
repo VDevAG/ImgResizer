@@ -2,7 +2,7 @@ from PIL import Image
 import os
 import sys
 import imghdr
-from tkinter import Button, Label, Grid, Tk, Entry, StringVar
+from tkinter import Button, Label, Grid, Tk, Entry, StringVar,messagebox
 from tkinter import ttk
 from tkinter import filedialog
 
@@ -20,19 +20,13 @@ class Resizer:
 
     def _control_image(self, file):
         if imghdr.what(self.dir + "/" + str(file)) == None:
-            print("false")
             return False
         else:
-            print("true")
             return True
 
-
     def resize_all(self):
-        print(self.input_directory)
         for item in self.input_directory:
-            print("görs detta??")
             if self._control_image(item):
-                print("här")
                 fp = self.dir + "/" + str(item)
                 im = Image.open(fp)
                 f, e = os.path.splitext(fp)
@@ -58,6 +52,7 @@ class Gui:
             outputp = output_path.get()
             r = Resizer(inputp, outputp, (200, 200), "resized.jpeg")
             r.resize_all()
+            messagebox.showinfo(title="info", message="Finished!")
 
         input_path = StringVar()
         output_path = StringVar()
