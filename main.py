@@ -1,6 +1,7 @@
 from PIL import Image
 import os
 import sys
+import imghdr
 from tkinter import Button, Label, Grid, Tk, Entry, StringVar
 from tkinter import ttk
 from tkinter import filedialog
@@ -11,24 +12,32 @@ directory = os.listdir(os.getcwd())
 
 class Resizer:
     def __init__(self, input_directory, output_directory, size, name_add_on):
+        self.dir = input_directory
         self.input_directory = os.listdir(input_directory)
         self.output_directory = output_directory
         self.size = size
         self.name_add_on = name_add_on
 
-    def _control_image(self, image):
-        return str(image).endswith("g") and not "resized" in str(image)
+    def _control_image(self, file):
+        if imghdr.what(self.dir + "/" + str(file)) == None:
+            print("false")
+            return False
+        else:
+            print("true")
+            return True
+
 
     def resize_all(self):
         print(self.input_directory)
         for item in self.input_directory:
-            if os.path.isfile(item) and self._control_image(item):
+            print("görs detta??")
+            if self._control_image(item):
                 print("här")
-                im = Image.open(item)
-                f, e = os.path.splitext(item)
+                fp = self.dir + "/" + str(item)
+                im = Image.open(fp)
+                f, e = os.path.splitext(fp)
                 im_resize = im.resize(self.size, Image.ANTIALIAS)
-                print(self.output_directory)
-                im_resize.save(self.output_directory + "/" + f + self.name_add_on, 'JPEG', quality=90)
+                im_resize.save(self.output_directory + "/" + item, 'JPEG', quality=90)
 
 class Gui:
     def __init__(self):
